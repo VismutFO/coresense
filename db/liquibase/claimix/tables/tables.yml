@@ -1,0 +1,322 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: business_customers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - createTable:
+            tableName: service_templates
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: business_customer_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fields_format
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: service_templates
+            baseColumnNames: business_customer_id
+            constraintName: fk_service_templates_business_customer_id
+            referencedTableName: business_customers
+            referencedColumnNames: id
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - createTable:
+            tableName: filled_services
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_template_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_data
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: filled_services
+            baseColumnNames: user_id
+            constraintName: fk_filled_services_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: filled_services
+            baseColumnNames: service_template_id
+            constraintName: fk_filled_services_service_template_id
+            referencedTableName: service_templates
+            referencedColumnNames: id
+  - changeSet:
+      id: 5
+      author: admin
+      changes:
+        - createTable:
+            tableName: scripts
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: script_code
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 6
+      author: admin
+      changes:
+        - createTable:
+            tableName: questions
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: service_template_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: script_id
+                  type: uuid
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: questions
+            baseColumnNames: service_template_id
+            constraintName: fk_questions_service_template_id
+            referencedTableName: service_templates
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: questions
+            baseColumnNames: script_id
+            constraintName: fk_questions_script_id
+            referencedTableName: scripts
+            referencedColumnNames: id
+  - changeSet:
+      id: 7
+      author: admin
+      changes:
+        - createTable:
+            tableName: questions_answered
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: question_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filled_service_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: answer
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: questions_answered
+            baseColumnNames: question_id
+            constraintName: fk_questions_answered_question_id
+            referencedTableName: questions
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: questions_answered
+            baseColumnNames: filled_service_id
+            constraintName: fk_questions_answered_filled_service_id
+            referencedTableName: filled_services
+            referencedColumnNames: id
